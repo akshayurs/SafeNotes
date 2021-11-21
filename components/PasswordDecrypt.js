@@ -1,4 +1,4 @@
-import Modal from './modal'
+import Modal from './Modal'
 import Link from 'next/link'
 import style from './modal.module.css'
 import { useState, useEffect, useRef } from 'react'

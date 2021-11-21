@@ -1,4 +1,4 @@
-import Modal from './modal'
+import Modal from './Modal'
 import style from './modal.module.css'
 import { useEffect, useRef, useState } from 'react'
 export default function PasswordEncrypt({
