@@ -1,4 +1,4 @@
-import Modal from './modal'
+import Modal from './Modal'
 import style from './modal.module.css'
 import Link from 'next/link'
 export default function CreateSite({ sitename, setOpenCreate }) {
