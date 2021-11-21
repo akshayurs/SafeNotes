@@ -1,7 +1,7 @@
 import Modal from './Modal'
 import Link from 'next/link'
 import style from './modal.module.css'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 export default function PasswordDecrypt({ handlePasswordDecrypt, error }) {
   const [password, setPassword] = useState('')
 

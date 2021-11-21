@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import CreateSite from '../components/CreateSite'
 import PasswordDecrypt from '../components/PasswordDecrypt'
 import PasswordEncrypt from '../components/PasswordEncrypt'
+import Loading from '../components/Loading'
 import fetchData from '../lib/fetchData'
 import style from './sitename.module.css'
 import Link from 'next/link'
@@ -13,6 +14,7 @@ export default function Site() {
   const [openChangePassword, setOpenChangePassword] = useState(false)
   const [popupText, setPopupText] = useState('')
   const [decryptError, setDecryptError] = useState('')
+  const [loading, setLoading] = useState(true)
   const createSite = useRef(false)
   const sitePassword = useRef('')
   const [siteText, setSiteText] = useState('')
@@ -31,6 +33,7 @@ export default function Site() {
       setOpenCreate(!isPageExist.found)
       createSite.current = !isPageExist.found
       setOpenPasswordDecrypt(isPageExist.found)
+      setLoading(false)
     })()
     return () => {
       clearTimeout(popupTimeout.current)
@@ -46,6 +49,8 @@ export default function Site() {
     }, 1000)
   }
   async function handlePasswordDecrypt(password) {
+    setLoading(true)
+    setOpenPasswordDecrypt(false)
     const data = await fetchData('/api/getPage/', {
       method: 'POST',
       headers: {
@@ -58,21 +63,23 @@ export default function Site() {
     })
     sitePassword.current = password
     if (!data.error) {
-      setOpenPasswordDecrypt(false)
       siteOldText.current = data.page.text
       setSiteText(data.page.text)
       handlePopupText('Loaded')
     } else {
+      setOpenPasswordDecrypt(true)
       setDecryptError(data.error)
       clearTimeout(errorTimeout.current)
       errorTimeout.current = setTimeout(() => {
         setDecryptError('')
       }, 1500)
     }
+    setLoading(false)
   }
   function handlePasswordEncrypt(password) {
     sitePassword.current = password
     setOpenPasswordEncrypt(false)
+    setLoading(true)
     handleSave()
   }
 
@@ -93,10 +100,12 @@ export default function Site() {
         }),
       })
       handlePopupText('Saved')
+      setLoading(false)
       siteOldText.current = siteText
     }
   }
   async function handleDelete() {
+    setLoading(true)
     const data = await fetchData('/api/deletePage/', {
       method: 'POST',
       headers: {
@@ -113,8 +122,11 @@ export default function Site() {
         router.push('/')
       }, 1000)
     }
+    setLoading(false)
   }
   async function handleChangePassword(password) {
+    setLoading(true)
+    setOpenChangePassword(false)
     const data = await fetchData('/api/changePassword/', {
       method: 'POST',
       headers: {
@@ -127,7 +139,7 @@ export default function Site() {
         text: siteText,
       }),
     })
-    setOpenChangePassword(false)
+    setLoading(false)
     handlePopupText('Password Changed')
   }
   return (
@@ -189,6 +201,7 @@ export default function Site() {
             setOpenPasswordEncrypt={setOpenChangePassword}
           />
         )}
+        {loading && <Loading />}
         {popupText !== '' && <div className={style.popupText}>{popupText}</div>}
       </div>
     </>
