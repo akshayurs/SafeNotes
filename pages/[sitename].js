@@ -30,9 +30,9 @@ export default function Site() {
       const isPageExist = await fetchData(
         `/api/getPage/?checkExist=${sitename}`
       )
+      setOpenPasswordDecrypt(isPageExist.found)
       setOpenCreate(!isPageExist.found)
       createSite.current = !isPageExist.found
-      setOpenPasswordDecrypt(isPageExist.found)
       setLoading(false)
     })()
     return () => {
@@ -50,8 +50,8 @@ export default function Site() {
   }
   async function handlePasswordDecrypt(password) {
     setLoading(true)
-    setOpenPasswordDecrypt(false)
     const data = await fetchData('/api/getPage/', {
+    setOpenPasswordDecrypt(false)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,8 +87,8 @@ export default function Site() {
     const URL = createSite.current ? '/api/createPage/' : '/api/modifyPage/'
     if (sitePassword.current == '') {
       setOpenPasswordEncrypt(true)
-    } else {
       const data = await fetchData(URL, {
+    } else {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,8 +105,8 @@ export default function Site() {
     }
   }
   async function handleDelete() {
-    setLoading(true)
     const data = await fetchData('/api/deletePage/', {
+    setLoading(true)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
