@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import fetchData from '../lib/fetchData'
 import style from './sitename.module.css'
 import Link from 'next/link'
+import Head from 'next/head'
 export default function Site() {
   const [openCreate, setOpenCreate] = useState(false)
   const [openPasswordDecrypt, setOpenPasswordDecrypt] = useState(false)
@@ -27,13 +28,15 @@ export default function Site() {
   useEffect(() => {
     siteaddress.current = window.location.href
     ;(async function () {
-      const isPageExist = await fetchData(
-        `/api/getPage/?checkExist=${sitename}`
-      )
-      setOpenPasswordDecrypt(isPageExist.found)
-      setOpenCreate(!isPageExist.found)
-      createSite.current = !isPageExist.found
-      setLoading(false)
+      if (sitename) {
+        const isPageExist = await fetchData(
+          `/api/getPage/?checkExist=${sitename}`
+        )
+        setOpenPasswordDecrypt(isPageExist.found)
+        setOpenCreate(!isPageExist.found)
+        createSite.current = !isPageExist.found
+        setLoading(false)
+      }
     })()
     return () => {
       clearTimeout(popupTimeout.current)
@@ -50,8 +53,8 @@ export default function Site() {
   }
   async function handlePasswordDecrypt(password) {
     setLoading(true)
-    const data = await fetchData('/api/getPage/', {
     setOpenPasswordDecrypt(false)
+    const data = await fetchData('/api/getPage/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,8 +90,8 @@ export default function Site() {
     const URL = createSite.current ? '/api/createPage/' : '/api/modifyPage/'
     if (sitePassword.current == '') {
       setOpenPasswordEncrypt(true)
-      const data = await fetchData(URL, {
     } else {
+      const data = await fetchData(URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,8 +108,8 @@ export default function Site() {
     }
   }
   async function handleDelete() {
-    const data = await fetchData('/api/deletePage/', {
     setLoading(true)
+    const data = await fetchData('/api/deletePage/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -144,6 +147,10 @@ export default function Site() {
   }
   return (
     <>
+      <Head>
+        <title>{sitename} | Safe Notes</title>
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+      </Head>
       <div className={style.site}>
         <div className={style.navbar}>
           <div className={style.logo}>
