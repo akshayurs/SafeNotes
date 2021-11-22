@@ -30,7 +30,7 @@ export default function Site() {
     ;(async function () {
       if (sitename) {
         const isPageExist = await fetchData(
-          `/api/getPage/?checkExist=${sitename}`
+          `/api/getPage?checkExist=${sitename}`
         )
         setOpenPasswordDecrypt(isPageExist.found)
         setOpenCreate(!isPageExist.found)
