@@ -87,7 +87,7 @@ export default function Site() {
   }
 
   async function handleSave() {
-    const URL = createSite.current ? '/api/createPage/' : '/api/modifyPage/'
+    const URL = createSite.current ? '/api/createPage' : '/api/modifyPage'
     if (sitePassword.current == '') {
       setOpenPasswordEncrypt(true)
     } else {
@@ -109,7 +109,7 @@ export default function Site() {
   }
   async function handleDelete() {
     setLoading(true)
-    const data = await fetchData('/api/deletePage/', {
+    const data = await fetchData('/api/deletePage', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ export default function Site() {
   async function handleChangePassword(password) {
     setLoading(true)
     setOpenChangePassword(false)
-    const data = await fetchData('/api/changePassword/', {
+    const data = await fetchData('/api/changePassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
