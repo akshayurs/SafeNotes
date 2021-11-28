@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       await client
         .db()
         .collection('deletedPages')
-        .deleteOne({ oldPage, deletedDate: Date.now() })
+        .insertOne({ oldPage, deletedDate: Date.now() })
 
       await client.db().collection('pages').deleteOne({ pageName })
       return res.status(200).json({ success: true, status: 'Page Deleted' })
